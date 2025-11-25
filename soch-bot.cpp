@@ -10,6 +10,9 @@
 #include "include/car-loan-selection.h"
 #include "include/scooter-loan.h"
 #include "include/scooter-loan-selection.h"
+#include "include/personal-loan.h"  // Added for personal loans
+#include "include/personal-loan-selection.h"  // Added for personal loans
+#include "include/general-chat-handler.h"  // Added for general chat
 #include <map>
 #include <algorithm>
 #include <cctype>
@@ -32,24 +35,29 @@ int main() {
 
     CarLoanSelection carSelection("data/car.txt");
     ScooterLoanSelection scooterSelection("data/scooter.txt");
+    PersonalLoanSelection personalSelection("data/personal.txt");  // Added for personal loans
 
     ApplicationHandler appHandler;
     appHandler.load("data/applications.txt");
+
+    GeneralChatHandler chatHandler("data/human-chat-corpus.txt");  // Added for general chat
 
     // 3. Initial greeting
     Display display;
     std::string initial = utterHandler.getResponse("*");
     display.greetingResponse(initial);
 
-    enum class State { NORMAL, SELECT_LOAN_TYPE, SELECT_AREA_HOME, SELECT_PLAN_HOME, CONFIRM_INSTALLMENT_HOME, PROCEED_APPLY, SELECT_MAKE_CAR, SELECT_PLAN_CAR, CONFIRM_INSTALLMENT_CAR, SELECT_MAKE_SCOOTER, SELECT_PLAN_SCOOTER, CONFIRM_INSTALLMENT_SCOOTER, COLLECT_FULL_NAME, COLLECT_FATHER_NAME, COLLECT_ADDRESS, COLLECT_CONTACT, COLLECT_EMAIL, COLLECT_CNIC, COLLECT_CNIC_EXPIRY, COLLECT_EMPLOYMENT, COLLECT_MARITAL, COLLECT_GENDER, COLLECT_DEPENDENTS, COLLECT_ANNUAL_INCOME, COLLECT_AVG_ELEC, COLLECT_CURR_ELEC, COLLECT_HAS_EXISTING, COLLECT_NUM_LOANS, COLLECT_LOAN_ACTIVE, COLLECT_LOAN_TOTAL, COLLECT_LOAN_RETURNED, COLLECT_LOAN_DUE, COLLECT_LOAN_BANK, COLLECT_LOAN_CATEGORY, COLLECT_REF1_NAME, COLLECT_REF1_CNIC, COLLECT_REF1_ISSUE, COLLECT_REF1_PHONE, COLLECT_REF1_EMAIL, COLLECT_REF2_NAME, COLLECT_REF2_CNIC, COLLECT_REF2_ISSUE, COLLECT_REF2_PHONE, COLLECT_REF2_EMAIL, COLLECT_CNIC_FRONT, COLLECT_CNIC_BACK, COLLECT_ELEC_BILL, COLLECT_SALARY_SLIP, COLLECT_CONFIRM, COUNT_CNIC, VIEW_PLAN_ID, SET_START_MONTH };
+    enum class State { NORMAL, SELECT_LOAN_TYPE, SELECT_AREA_HOME, SELECT_PLAN_HOME, CONFIRM_INSTALLMENT_HOME, PROCEED_APPLY, SELECT_MAKE_CAR, SELECT_PLAN_CAR, CONFIRM_INSTALLMENT_CAR, SELECT_MAKE_SCOOTER, SELECT_PLAN_SCOOTER, CONFIRM_INSTALLMENT_SCOOTER, SELECT_CATEGORY_PERSONAL, SELECT_PLAN_PERSONAL, CONFIRM_INSTALLMENT_PERSONAL, COLLECT_FULL_NAME, COLLECT_FATHER_NAME, COLLECT_ADDRESS, COLLECT_CONTACT, COLLECT_EMAIL, COLLECT_CNIC, COLLECT_CNIC_EXPIRY, COLLECT_EMPLOYMENT, COLLECT_MARITAL, COLLECT_GENDER, COLLECT_DEPENDENTS, COLLECT_ANNUAL_INCOME, COLLECT_AVG_ELEC, COLLECT_CURR_ELEC, COLLECT_HAS_EXISTING, COLLECT_NUM_LOANS, COLLECT_LOAN_ACTIVE, COLLECT_LOAN_TOTAL, COLLECT_LOAN_RETURNED, COLLECT_LOAN_DUE, COLLECT_LOAN_BANK, COLLECT_LOAN_CATEGORY, COLLECT_REF1_NAME, COLLECT_REF1_CNIC, COLLECT_REF1_ISSUE, COLLECT_REF1_PHONE, COLLECT_REF1_EMAIL, COLLECT_REF2_NAME, COLLECT_REF2_CNIC, COLLECT_REF2_ISSUE, COLLECT_REF2_PHONE, COLLECT_REF2_EMAIL, COLLECT_CNIC_FRONT, COLLECT_CNIC_BACK, COLLECT_ELEC_BILL, COLLECT_SALARY_SLIP, COLLECT_CONFIRM, COUNT_CNIC, VIEW_PLAN_ID, SET_START_MONTH, RESUME_ID, RESUME_CNIC, GENERAL };  // Updated with personal, resume, and general states
     State currentState = State::NORMAL;
 
     std::vector<HomeLoan> current_filtered_home;
     std::vector<CarLoan> current_filtered_car;
     std::vector<ScooterLoan> current_filtered_scooter;
+    std::vector<PersonalLoan> current_filtered_personal;  // Added for personal loans
     HomeLoan selected_home;
     CarLoan selected_car;
     ScooterLoan selected_scooter;
+    PersonalLoan selected_personal;  // Added for personal loans
     std::string userInput;
     std::string current_loan_type;
     std::string current_sub_type;
@@ -60,6 +68,7 @@ int main() {
     std::map<std::string, std::string> current_loan_data;
     std::vector<std::map<std::string, std::string>> existing_loans_vec;
     std::string current_app_id; // for view plan etc.
+    std::string resume_id, resume_cnic;  // Added for resume
 
     const std::string month_names[13] = {"", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
@@ -139,6 +148,17 @@ int main() {
             selected_scooter = filtered[idx];
             ss.calculateInstallmentBreakdown(selected_scooter, inst, rem, total_price, down_payment);
             installments = selected_scooter.getInstallments();
+        } else if (app.loan_type == "personal") {  // Added for personal
+            PersonalLoanSelection ps("data/personal.txt");
+            auto filtered = ps.personalsInCategory(app.sub_type);
+            int idx = std::stoi(app.plan_id) - 1;
+            if (idx < 0 || idx >= static_cast<int>(filtered.size())) {
+                display.undefinedInputResponse("Invalid plan.");
+                return;
+            }
+            selected_personal = filtered[idx];
+            ps.calculateInstallmentBreakdown(selected_personal, inst, rem, total_price, down_payment);
+            installments = selected_personal.getInstallments();
         }
         auto months = generate_months(app.starting_month, installments);
         if (months.empty()) {
@@ -146,6 +166,22 @@ int main() {
             return;
         }
         display.monthlyPlanDisplay(total_price, down_payment, months, inst, rem);
+    };
+
+    auto save_partial = [&]() {  // Added for multi-session save
+        if (current_app.app_id.empty()) return;
+        std::string new_status = "C0";
+        if (currentState >= State::COLLECT_ANNUAL_INCOME) new_status = "C1";
+        if (currentState >= State::COLLECT_REF1_NAME) new_status = "C2";
+        if (currentState >= State::COLLECT_CNIC_FRONT) new_status = "C3";
+        current_app.status = new_status;
+        if (appHandler.getById(current_app.app_id)) {
+            appHandler.update(current_app);
+        } else {
+            appHandler.add(current_app);
+        }
+        appHandler.save("data/applications.txt");
+        display.greetingResponse("Progress saved. You can resume later with ID " + current_app.app_id);
     };
 
     while (true) {
@@ -157,6 +193,9 @@ int main() {
         userInput = utterHandler.toLower(userInput);
 
         if (userInput == "x") {
+            if (currentState >= State::PROCEED_APPLY && !current_app.app_id.empty()) {  // Added save on exit if in app
+                save_partial();
+            }
             std::string exitMsg = utterHandler.getResponse("exit");
             std::cout << exitMsg << "\n";
             break;
@@ -192,6 +231,18 @@ int main() {
                 std::string response = utterHandler.generateResponse("s");
                 display.greetingResponse(response);
                 currentState = State::SELECT_MAKE_SCOOTER;
+            } else if (userInput == "p" || userInput == "personal" || userInput == "personal loan") {  // Added personal handling
+                current_loan_type = "personal";
+                std::string response = utterHandler.generateResponse("p");
+                display.greetingResponse(response);
+                currentState = State::SELECT_CATEGORY_PERSONAL;
+            } else if (userInput == "resume application") {  // Added resume handling
+                currentState = State::RESUME_ID;
+                display.promptForInput(utterHandler.getResponse("prompt_resume_id"));
+            } else if (userInput == "general chat") {  // Added general chat
+                std::string response = utterHandler.getResponse("enter_general");
+                display.greetingResponse(response);
+                currentState = State::GENERAL;
             } else if (userInput == "count applications") {
                 currentState = State::COUNT_CNIC;
                 display.promptForInput(utterHandler.getResponse("count applications"));
@@ -215,10 +266,11 @@ int main() {
                 std::string response = utterHandler.generateResponse("s");
                 display.greetingResponse(response);
                 currentState = State::SELECT_MAKE_SCOOTER;
-            } else if (userInput == "p") {
-                std::string response = utterHandler.getResponse("not_implemented");
+            } else if (userInput == "p") {  // Added personal in loan type
+                current_loan_type = "personal";
+                std::string response = utterHandler.generateResponse("p");
                 display.greetingResponse(response);
-                currentState = State::NORMAL;
+                currentState = State::SELECT_CATEGORY_PERSONAL;
             } else {
                 std::string response = utterHandler.getResponse("invalid_loan_type");
                 display.greetingResponse(response);
@@ -302,6 +354,32 @@ int main() {
                 std::string invalid = utterHandler.getResponse("invalid_make");
                 display.greetingResponse(invalid);
             }
+        } else if (currentState == State::SELECT_CATEGORY_PERSONAL) {  // Added for personal category
+            int catNum = -1;
+            if (is_digit(userInput)) {
+                catNum = std::stoi(userInput);
+            }
+            if (catNum >= 1 && catNum <= 2) {  // Assuming 2 categories based on sample personal.txt; adjust if more
+                std::string key = "select_category" + std::to_string(catNum);
+                std::string response = utterHandler.getResponse(key);
+                display.greetingResponse(response);
+
+                current_sub_type = "Category " + std::to_string(catNum);
+                current_filtered_personal = personalSelection.personalsInCategory(current_sub_type);
+
+                if (current_filtered_personal.empty()) {
+                    std::string noLoans = utterHandler.getResponse("no_loans");
+                    display.undefinedInputResponse(noLoans);
+                    currentState = State::NORMAL;
+                } else {
+                    std::string prompt = utterHandler.getResponse("prompt_select_plan");
+                    display.personalLoanDisplay(current_filtered_personal, 0, current_filtered_personal.size() - 1, prompt);
+                    currentState = State::SELECT_PLAN_PERSONAL;
+                }
+            } else {
+                std::string invalid = utterHandler.getResponse("invalid_category");
+                display.greetingResponse(invalid);
+            }
         } else if (currentState == State::SELECT_PLAN_HOME) {
             int id = -1;
             if (is_digit(userInput)) {
@@ -370,6 +448,30 @@ int main() {
                 display.promptForInput(promptInst);
 
                 currentState = State::CONFIRM_INSTALLMENT_SCOOTER;
+            } else {
+                std::string invalid = utterHandler.getResponse("invalid_plan");
+                display.greetingResponse(invalid);
+            }
+        } else if (currentState == State::SELECT_PLAN_PERSONAL) {  // Added for personal plan
+            int id = -1;
+            if (is_digit(userInput)) {
+                id = std::stoi(userInput);
+            }
+            if (id >= 1 && id <= static_cast<int>(current_filtered_personal.size())) {
+                current_plan_id = userInput;
+                std::string key = "selected_plan";
+                std::string response = utterHandler.getResponse(key);
+                response = utterHandler.replacePlaceholder(response, "{id}", userInput);
+                display.greetingResponse(response);
+
+                selected_personal = current_filtered_personal[id - 1];
+                std::string monthlyInfo = personalSelection.calculateMonthlyPayment(selected_personal);
+                display.payPerMonthDisplay(monthlyInfo);
+
+                std::string promptInst = utterHandler.getResponse("prompt_installment");
+                display.promptForInput(promptInst);
+
+                currentState = State::CONFIRM_INSTALLMENT_PERSONAL;
             } else {
                 std::string invalid = utterHandler.getResponse("invalid_plan");
                 display.greetingResponse(invalid);
@@ -449,6 +551,31 @@ int main() {
                 std::string invalid = utterHandler.getResponse("invalid_yes_no");
                 display.greetingResponse(invalid);
             }
+        } else if (currentState == State::CONFIRM_INSTALLMENT_PERSONAL) {  // Added for personal installment
+            std::string low = utterHandler.toLower(userInput);
+            if (low == "yes" || low == "y") {
+                std::string response = utterHandler.getResponse("selected_installment");
+                display.greetingResponse(response);
+
+                std::vector<std::string> insts, rems;
+                std::string total, down;
+                personalSelection.calculateInstallmentBreakdown(selected_personal, insts, rems, total, down);
+                display.monthlyInstallmentDisplay(total, down, insts, rems);
+
+                std::string promptApply = utterHandler.getResponse("prompt_apply");
+                display.promptForInput(promptApply);
+                currentState = State::PROCEED_APPLY;
+            } else if (low == "no" || low == "n") {
+                std::string response = utterHandler.getResponse("no_installment");
+                display.greetingResponse(response);
+
+                std::string promptApply = utterHandler.getResponse("prompt_apply");
+                display.promptForInput(promptApply);
+                currentState = State::PROCEED_APPLY;
+            } else {
+                std::string invalid = utterHandler.getResponse("invalid_yes_no");
+                display.greetingResponse(invalid);
+            }
         } else if (currentState == State::PROCEED_APPLY) {
             std::string low = utterHandler.toLower(userInput);
             if (low == "yes" || low == "y") {
@@ -456,6 +583,8 @@ int main() {
                 current_app.loan_type = current_loan_type;
                 current_app.sub_type = current_sub_type;
                 current_app.plan_id = current_plan_id;
+                current_app.app_id = appHandler.generateNextId();  // Added app_id generation
+                current_app.status = "C0";  // Added initial status
                 currentState = State::COLLECT_FULL_NAME;
                 display.promptForInput(utterHandler.getResponse("prompt_full_name"));
             } else if (low == "no" || low == "n") {
@@ -550,6 +679,14 @@ int main() {
         } else if (currentState == State::COLLECT_DEPENDENTS) {
             if (is_digit(userInput)) {
                 current_app.num_dependents = userInput;
+                if (appHandler.getById(current_app.app_id)) {  // Added save after personal section
+                    appHandler.update(current_app);
+                } else {
+                    appHandler.add(current_app);
+                }
+                appHandler.save("data/applications.txt");
+                current_app.status = "C1";
+                display.greetingResponse(utterHandler.getResponse("section_saved") + " Personal Information complete.");
                 currentState = State::COLLECT_ANNUAL_INCOME;
                 display.promptForInput(utterHandler.getResponse("prompt_annual_income"));
             } else {
@@ -574,6 +711,14 @@ int main() {
         } else if (currentState == State::COLLECT_CURR_ELEC) {
             if (is_digit(userInput)) {
                 current_app.current_electricity = userInput;
+                if (appHandler.getById(current_app.app_id)) {  // Added save after financial section (if no existing loans)
+                    appHandler.update(current_app);
+                } else {
+                    appHandler.add(current_app);
+                }
+                appHandler.save("data/applications.txt");
+                current_app.status = "C2";
+                display.greetingResponse(utterHandler.getResponse("section_saved") + " Financial Information complete.");
                 currentState = State::COLLECT_HAS_EXISTING;
                 display.promptForInput(utterHandler.getResponse("prompt_has_existing"));
             } else {
@@ -586,6 +731,14 @@ int main() {
                 display.promptForInput(utterHandler.getResponse("prompt_num_loans"));
             } else if (low == "no" || low == "n") {
                 current_app.existing_loans = "no";
+                if (appHandler.getById(current_app.app_id)) {  // Added save after financial if no loans
+                    appHandler.update(current_app);
+                } else {
+                    appHandler.add(current_app);
+                }
+                appHandler.save("data/applications.txt");
+                current_app.status = "C2";
+                display.greetingResponse(utterHandler.getResponse("section_saved") + " Financial Information complete.");
                 currentState = State::COLLECT_REF1_NAME;
                 display.promptForInput(utterHandler.getResponse("prompt_ref1_name"));
             } else {
@@ -602,6 +755,14 @@ int main() {
                     display.promptForInput(prompt);
                 } else {
                     current_app.existing_loans = "no";
+                    if (appHandler.getById(current_app.app_id)) {  // Added save after financial
+                        appHandler.update(current_app);
+                    } else {
+                        appHandler.add(current_app);
+                    }
+                    appHandler.save("data/applications.txt");
+                    current_app.status = "C2";
+                    display.greetingResponse(utterHandler.getResponse("section_saved") + " Financial Information complete.");
                     currentState = State::COLLECT_REF1_NAME;
                     display.promptForInput(utterHandler.getResponse("prompt_ref1_name"));
                 }
@@ -685,6 +846,14 @@ int main() {
                     existing_loans_vec.clear();
                     num_existing = 0;
                     current_loan_index = 0;
+                    if (appHandler.getById(current_app.app_id)) {  // Added save after financial with loans
+                        appHandler.update(current_app);
+                    } else {
+                        appHandler.add(current_app);
+                    }
+                    appHandler.save("data/applications.txt");
+                    current_app.status = "C2";
+                    display.greetingResponse(utterHandler.getResponse("section_saved") + " Financial Information complete.");
                     currentState = State::COLLECT_REF1_NAME;
                     display.promptForInput(utterHandler.getResponse("prompt_ref1_name"));
                 }
@@ -766,6 +935,14 @@ int main() {
         } else if (currentState == State::COLLECT_REF2_EMAIL) {
             if (validate_email(userInput)) {
                 current_app.ref2_email = userInput;
+                if (appHandler.getById(current_app.app_id)) {  // Added save after references
+                    appHandler.update(current_app);
+                } else {
+                    appHandler.add(current_app);
+                }
+                appHandler.save("data/applications.txt");
+                current_app.status = "C3";
+                display.greetingResponse(utterHandler.getResponse("section_saved") + " References complete.");
                 currentState = State::COLLECT_CNIC_FRONT;
                 display.promptForInput(utterHandler.getResponse("prompt_cnic_front"));
             } else {
@@ -807,6 +984,7 @@ int main() {
             std::string low = utterHandler.toLower(userInput);
             if (low == "yes" || low == "y") {
                 current_app.app_id = appHandler.generateNextId();
+                current_app.status = "submitted";  // Added set to submitted
 
                 std::ofstream file("data/applications.txt", std::ios::app);
                 if (file.is_open()) {
@@ -880,6 +1058,44 @@ int main() {
                 appHandler.save("data/applications.txt");
                 generate_plan(*app);
             }
+            currentState = State::NORMAL;
+        } else if (currentState == State::RESUME_ID) {  // Added for resume ID
+            resume_id = userInput;
+            currentState = State::RESUME_CNIC;
+            display.promptForInput(utterHandler.getResponse("prompt_resume_cnic"));
+        } else if (currentState == State::RESUME_CNIC) {  // Added for resume CNIC verify
+            resume_cnic = userInput;
+            auto app = appHandler.getById(resume_id);
+            if (!app || app->cnic_number != resume_cnic || !appHandler.isIncomplete(app->status)) {
+                display.undefinedInputResponse("Invalid ID or CNIC, or application not resumable.");
+                currentState = State::NORMAL;
+            } else {
+                current_app = *app;
+                current_loan_type = app->loan_type;
+                current_sub_type = app->sub_type;
+                current_plan_id = app->plan_id;
+                if (app->status == "C1") {
+                    currentState = State::COLLECT_ANNUAL_INCOME;
+                    display.promptForInput(utterHandler.getResponse("prompt_annual_income"));
+                } else if (app->status == "C2") {
+                    currentState = State::COLLECT_REF1_NAME;
+                    display.promptForInput(utterHandler.getResponse("prompt_ref1_name"));
+                } else if (app->status == "C3") {
+                    currentState = State::COLLECT_CNIC_FRONT;
+                    display.promptForInput(utterHandler.getResponse("prompt_cnic_front"));
+                }
+                display.greetingResponse("Resuming application " + resume_id);
+            }
+        } else if (currentState == State::GENERAL) {  // Added for general chat
+            if (userInput == "back" || userInput == "exit") {
+                display.greetingResponse(utterHandler.getResponse("exit_general"));
+                currentState = State::NORMAL;
+            } else {
+                std::string response = chatHandler.getResponse(originalInput);
+                display.greetingResponse(response);
+            }
+        } else if (userInput == "pause" && currentState >= State::PROCEED_APPLY && currentState <= State::COLLECT_CONFIRM) {  // Added pause handling in app states
+            save_partial();
             currentState = State::NORMAL;
         }
     }
