@@ -19,4 +19,5 @@ public:
     Application* getById(const std::string& id);
     const Application* getById(const std::string& id) const;
     void update(const Application& app);
+    bool isIncomplete(const std::string& status) const;
 };
