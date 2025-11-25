@@ -1,4 +1,3 @@
-# data/personal.txt
 Category#Amount#Installments#Total Payable#Advance
 Category 1#500000#60#600000#0
 Category 1#500000#48#550000#0

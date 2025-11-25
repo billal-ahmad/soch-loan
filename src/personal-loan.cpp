@@ -1,4 +1,3 @@
-// src/personal-loan.cpp
 #include "../include/personal-loan.h"
 
 PersonalLoan::PersonalLoan() : _installments(0) {}

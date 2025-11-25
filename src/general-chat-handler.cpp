@@ -1,4 +1,3 @@
-// src/general-chat-handler.cpp
 #include "../include/general-chat-handler.h"
 #include <fstream>
 #include <sstream>

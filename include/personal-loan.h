@@ -1,4 +1,3 @@
-// include/personal-loan.h
 #pragma once
 #include <string>
 
