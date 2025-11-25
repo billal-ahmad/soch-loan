@@ -4,6 +4,7 @@
 #include "home-loan.h"
 #include "car-loan.h"
 #include "scooter-loan.h"
+#include "personal-loan.h"
 
 class Display {
 public:
@@ -28,4 +29,5 @@ public:
     void monthlyInstallmentDisplay(const std::string &total_price, const std::string &down_payment, const std::vector<std::string> &installments, const std::vector<std::string> &remaining_price);
     void monthlyPlanDisplay(const std::string &total_price, const std::string &down_payment, const std::vector<std::string> &months, const std::vector<std::string> &installments, const std::vector<std::string> &remaining_price);
     void promptForInput(const std::string &text);
+    void personalLoanDisplay(const std::vector<PersonalLoan> &personal_loans, int start = 0, int end = -1, const std::string &prompt = "");
 };
