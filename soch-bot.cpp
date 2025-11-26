@@ -297,7 +297,6 @@ int main() {
                 userInput == "home" ||
                 userInput == "home loan") {
                 current_loan_type = "home";
-                std::string resp = utterHandler.generateResponse("h");
                 currentState = State::ASK_RESUME;
                 display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "a") {
@@ -306,21 +305,18 @@ int main() {
                        userInput == "car" ||
                        userInput == "car loan") {
                 current_loan_type = "car";
-                std::string resp = utterHandler.generateResponse("c");
                 currentState = State::ASK_RESUME;
                 display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "s" ||
                        userInput == "scooter" ||
                        userInput == "scooter loan") {
                 current_loan_type = "scooter";
-                std::string resp = utterHandler.generateResponse("s");
                 currentState = State::ASK_RESUME;
                 display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "p" ||
                        userInput == "personal" ||
                        userInput == "personal loan") { // Added personal handling
                 current_loan_type = "personal";
-                std::string resp = utterHandler.generateResponse("p");
                 currentState = State::ASK_RESUME;
                 display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "resume application") { // Added resume handling
@@ -351,23 +347,17 @@ int main() {
                     utterHandler.getResponse("prompt_resume_id")
                 );
             } else if (low == "no" || low == "n") {
-                current_app = Application();
-                current_app.loan_type = current_loan_type;
-                current_app.sub_type = current_sub_type;
-                current_app.plan_id = current_plan_id;
-                current_app.app_id =
-                    appHandler.generateNextId(); // Added app_id generation
-                current_app.status = "C0"; // Added initial status
-                display.greetingResponse(
-                    "Starting new application with ID " + current_app.app_id
-                );
-                display.greetingResponse(
-                    "Entering Personal Information section."
-                ); // Added section print
-                currentState = State::COLLECT_FULL_NAME;
-                display.promptForInput(
-                    utterHandler.getResponse("prompt_full_name")
-                );
+                std::string resp = utterHandler.generateResponse(current_loan_type);
+                display.greetingResponse(resp);
+                if (current_loan_type == "home") {
+                    currentState = State::SELECT_AREA_HOME;
+                } else if (current_loan_type == "car") {
+                    currentState = State::SELECT_MAKE_CAR;
+                } else if (current_loan_type == "scooter") {
+                    currentState = State::SELECT_MAKE_SCOOTER;
+                } else if (current_loan_type == "personal") {
+                    currentState = State::SELECT_CATEGORY_PERSONAL;
+                }
             } else {
                 std::string invalid =
                     utterHandler.getResponse("invalid_yes_no");
@@ -376,22 +366,18 @@ int main() {
         } else if (currentState == State::SELECT_LOAN_TYPE) {
             if (userInput == "h") {
                 current_loan_type = "home";
-                std::string resp = utterHandler.generateResponse("h");
                 currentState = State::ASK_RESUME;
                 display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "c") {
                 current_loan_type = "car";
-                std::string resp = utterHandler.generateResponse("c");
                 currentState = State::ASK_RESUME;
                 display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "s") {
                 current_loan_type = "scooter";
-                std::string resp = utterHandler.generateResponse("s");
                 currentState = State::ASK_RESUME;
                 display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "p") { // Added personal in loan type
                 current_loan_type = "personal";
-                std::string resp = utterHandler.generateResponse("p");
                 currentState = State::ASK_RESUME;
                 display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else {
@@ -591,6 +577,30 @@ int main() {
                     utterHandler.getResponse("prompt_installment");
                 display.promptForInput(promptInst);
                 currentState = State::CONFIRM_INSTALLMENT_SCOOTER;
+            } else {
+                std::string invalid = utterHandler.getResponse("invalid_plan");
+                display.greetingResponse(invalid);
+            }
+        } else if (currentState == State::SELECT_PLAN_PERSONAL) {
+            int id = -1;
+            if (is_digit(userInput)) {
+                id = std::stoi(userInput);
+            }
+            if (id >= 1 &&
+                id <= static_cast<int>(current_filtered_personal.size())) {
+                current_plan_id = userInput;
+                std::string key = "selected_plan";
+                std::string resp = utterHandler.getResponse(key);
+                resp = utterHandler.replacePlaceholder(resp, "{id}", userInput);
+                display.greetingResponse(resp);
+                selected_personal = current_filtered_personal[id - 1];
+                std::string monthlyInfo =
+                    personalSelection.calculateMonthlyPayment(selected_personal);
+                display.payPerMonthDisplay(monthlyInfo);
+                std::string promptInst =
+                    utterHandler.getResponse("prompt_installment");
+                display.promptForInput(promptInst);
+                currentState = State::CONFIRM_INSTALLMENT_PERSONAL;
             } else {
                 std::string invalid = utterHandler.getResponse("invalid_plan");
                 display.greetingResponse(invalid);
@@ -854,25 +864,6 @@ int main() {
         } else if (currentState == State::PROCEED_APPLY) {
             std::string low = utterHandler.toLower(userInput);
             if (low == "yes" || low == "y") {
-                currentState = State::ASK_RESUME; // Added ask resume
-                display.promptForInput(
-                    utterHandler.getResponse("prompt_resume")
-                );
-            } else if (low == "no" || low == "n") {
-                currentState = State::NORMAL;
-            } else {
-                std::string invalid =
-                    utterHandler.getResponse("invalid_yes_no");
-                display.greetingResponse(invalid);
-            }
-        } else if (currentState == State::ASK_RESUME) { // Added ask resume
-            std::string low = utterHandler.toLower(userInput);
-            if (low == "yes" || low == "y") {
-                currentState = State::RESUME_ID;
-                display.promptForInput(
-                    utterHandler.getResponse("prompt_resume_id")
-                );
-            } else if (low == "no" || low == "n") {
                 current_app = Application();
                 current_app.loan_type = current_loan_type;
                 current_app.sub_type = current_sub_type;
@@ -890,6 +881,8 @@ int main() {
                 display.promptForInput(
                     utterHandler.getResponse("prompt_full_name")
                 );
+            } else if (low == "no" || low == "n") {
+                currentState = State::NORMAL;
             } else {
                 std::string invalid =
                     utterHandler.getResponse("invalid_yes_no");
@@ -1256,7 +1249,8 @@ int main() {
             std::string low = utterHandler.toLower(userInput);
             if (low == "car" ||
                 low == "home" ||
-                low == "bike") {
+                low == "bike" ||
+                low == "personal") {
                 current_loan_data["category"] = low;
                 existing_loans_vec.push_back(current_loan_data);
                 current_loan_data.clear();
