@@ -2,3 +2,4 @@
 0002#car#Make 2#1#Ahmad#Arkam#street 01#01234567891#dkjfdslf@.com#1234657981234#02-10-2027#retired#married#male#5#1200000#3524#3427#yes|yes,40000,35000,5000,HBL,bike|no,200000,200000,0,Alfalah,home#Wahid#7894561327894#02-10-2023#12346578965#jfdsjfdj@.com#Abdul#9638527419638#02-11-2021#12378965415#kfjsdkjs@.com#cnic_front.jpg#cnic_back.jpg#recent_electric_bill#salary_slip.jpg#approved#
 0003#personal#Category 1#1#ali#ahmad#kkkkk#78936914785#dkjdkfj@.com#1239877413698#01-05-2035#unemployed#widowed#female#2#500000#4500#3945#no#arkam#2587413698741#02-12-2024#36547896541#jdsjfksdj@.com#aliza#3245987597415#02-09-2023#98720145879#kdkdkkk@.com#jjjj#kkkk#llll#iiii#submitted#
 0004#personal#Category 1#1##############################C0#
+0005#car#Make 1#1#adnan#ehsan#kkkkkkkk#12345678941#kklll@.com#9639639639639#21-05-2028#retired#married#male#4###################C1#

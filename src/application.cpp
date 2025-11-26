@@ -7,41 +7,41 @@ Application::Application() : status("submitted") {}
 
 std::string Application::serialize() const {
     std::stringstream ss;
-    ss << app_id;
-    if (!loan_type.empty()) ss << "#" << loan_type;
-    if (!sub_type.empty()) ss << "#" << sub_type;
-    if (!plan_id.empty()) ss << "#" << plan_id;
-    if (!full_name.empty()) ss << "#" << full_name;
-    if (!father_name.empty()) ss << "#" << father_name;
-    if (!postal_address.empty()) ss << "#" << postal_address;
-    if (!contact_number.empty()) ss << "#" << contact_number;
-    if (!email_address.empty()) ss << "#" << email_address;
-    if (!cnic_number.empty()) ss << "#" << cnic_number;
-    if (!cnic_expiry.empty()) ss << "#" << cnic_expiry;
-    if (!employment_status.empty()) ss << "#" << employment_status;
-    if (!marital_status.empty()) ss << "#" << marital_status;
-    if (!gender.empty()) ss << "#" << gender;
-    if (!num_dependents.empty()) ss << "#" << num_dependents;
-    if (!annual_income.empty()) ss << "#" << annual_income;
-    if (!avg_electricity.empty()) ss << "#" << avg_electricity;
-    if (!current_electricity.empty()) ss << "#" << current_electricity;
-    if (!existing_loans.empty()) ss << "#" << existing_loans;
-    if (!ref1_name.empty()) ss << "#" << ref1_name;
-    if (!ref1_cnic.empty()) ss << "#" << ref1_cnic;
-    if (!ref1_issue.empty()) ss << "#" << ref1_issue;
-    if (!ref1_phone.empty()) ss << "#" << ref1_phone;
-    if (!ref1_email.empty()) ss << "#" << ref1_email;
-    if (!ref2_name.empty()) ss << "#" << ref2_name;
-    if (!ref2_cnic.empty()) ss << "#" << ref2_cnic;
-    if (!ref2_issue.empty()) ss << "#" << ref2_issue;
-    if (!ref2_phone.empty()) ss << "#" << ref2_phone;
-    if (!ref2_email.empty()) ss << "#" << ref2_email;
-    if (!cnic_front.empty()) ss << "#" << cnic_front;
-    if (!cnic_back.empty()) ss << "#" << cnic_back;
-    if (!elec_bill.empty()) ss << "#" << elec_bill;
-    if (!salary_slip.empty()) ss << "#" << salary_slip;
-    if (!status.empty()) ss << "#" << status;
-    if (!starting_month.empty()) ss << "#" << starting_month;
+    ss << app_id
+       << "#" << loan_type
+       << "#" << sub_type
+       << "#" << plan_id
+       << "#" << full_name
+       << "#" << father_name
+       << "#" << postal_address
+       << "#" << contact_number
+       << "#" << email_address
+       << "#" << cnic_number
+       << "#" << cnic_expiry
+       << "#" << employment_status
+       << "#" << marital_status
+       << "#" << gender
+       << "#" << num_dependents
+       << "#" << annual_income
+       << "#" << avg_electricity
+       << "#" << current_electricity
+       << "#" << existing_loans
+       << "#" << ref1_name
+       << "#" << ref1_cnic
+       << "#" << ref1_issue
+       << "#" << ref1_phone
+       << "#" << ref1_email
+       << "#" << ref2_name
+       << "#" << ref2_cnic
+       << "#" << ref2_issue
+       << "#" << ref2_phone
+       << "#" << ref2_email
+       << "#" << cnic_front
+       << "#" << cnic_back
+       << "#" << elec_bill
+       << "#" << salary_slip
+       << "#" << status
+       << "#" << starting_month;
     return ss.str();
 }
 
