@@ -16,9 +16,9 @@ select_make1#You have selected Make 1. Here are the available options:
 select_make2#You have selected Make 2. Here are the available options:
 invalid_area#Invalid area selection. Please choose 1, 2, 3, or 4.
 invalid_make#Invalid make selection. Please choose valid option.
-invalid_loan_type#Invalid loan type selection. Please choose H for home loan, C for car loan, S for scooter loan, P for personal loan, or X to exit.
+invalid_loan_type#Invalid loan type selection. Please choose H for home loan, C for car loan, S for scooter loan, P for a personal loan, or X to exit.
 selected_plan#You have selected plan {id}. Here is the monthly payment information:
-prompt_installment#Do you want to view the installment breakdown? (yes/no):
+prompt_installment#Enter starting month for installment breakdown (e.g., January 2026) or 'no' to skip:
 prompt_apply#Do you want to proceed with the loan application? (yes/no):
 invalid_yes_no#Please enter yes or no.
 selected_installment#Here is the detailed monthly installment breakdown for your selected plan:
@@ -91,3 +91,5 @@ general chat#Entering general conversation mode. Type 'back' to return.
 enter_general#Now in general mode.
 exit_general#Back to main.
 pause#Pausing application.
+prompt_resume#Do you have an existing application to resume? (yes/no):
+invalid_start_month#Invalid starting month. Use Month YYYY or 'no' to skip.
