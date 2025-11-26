@@ -298,8 +298,8 @@ int main() {
                 userInput == "home loan") {
                 current_loan_type = "home";
                 std::string resp = utterHandler.generateResponse("h");
-                display.greetingResponse(resp);
                 currentState = State::ASK_RESUME;
+                display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "a") {
                 currentState = State::SELECT_LOAN_TYPE;
             } else if (userInput == "c" ||
@@ -307,22 +307,22 @@ int main() {
                        userInput == "car loan") {
                 current_loan_type = "car";
                 std::string resp = utterHandler.generateResponse("c");
-                display.greetingResponse(resp);
                 currentState = State::ASK_RESUME;
+                display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "s" ||
                        userInput == "scooter" ||
                        userInput == "scooter loan") {
                 current_loan_type = "scooter";
                 std::string resp = utterHandler.generateResponse("s");
-                display.greetingResponse(resp);
                 currentState = State::ASK_RESUME;
+                display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "p" ||
                        userInput == "personal" ||
                        userInput == "personal loan") { // Added personal handling
                 current_loan_type = "personal";
                 std::string resp = utterHandler.generateResponse("p");
-                display.greetingResponse(resp);
                 currentState = State::ASK_RESUME;
+                display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "resume application") { // Added resume handling
                 currentState = State::RESUME_ID;
                 display.promptForInput(
@@ -377,23 +377,23 @@ int main() {
             if (userInput == "h") {
                 current_loan_type = "home";
                 std::string resp = utterHandler.generateResponse("h");
-                display.greetingResponse(resp);
-                currentState = State::ASK_RESUME; // Ask resume after loan type
+                currentState = State::ASK_RESUME;
+                display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "c") {
                 current_loan_type = "car";
                 std::string resp = utterHandler.generateResponse("c");
-                display.greetingResponse(resp);
-                currentState = State::ASK_RESUME; // Ask resume after loan type
+                currentState = State::ASK_RESUME;
+                display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "s") {
                 current_loan_type = "scooter";
                 std::string resp = utterHandler.generateResponse("s");
-                display.greetingResponse(resp);
-                currentState = State::ASK_RESUME; // Ask resume after loan type
+                currentState = State::ASK_RESUME;
+                display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else if (userInput == "p") { // Added personal in loan type
                 current_loan_type = "personal";
                 std::string resp = utterHandler.generateResponse("p");
-                display.greetingResponse(resp);
-                currentState = State::ASK_RESUME; // Ask resume after loan type
+                currentState = State::ASK_RESUME;
+                display.promptForInput(utterHandler.getResponse("prompt_resume"));
             } else {
                 std::string resp = utterHandler.getResponse("invalid_loan_type");
                 display.greetingResponse(resp);
