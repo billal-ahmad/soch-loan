@@ -282,62 +282,70 @@ int main() {
             break;
         }
         if (currentState == State::NORMAL) {
-            std::string response = utterHandler.generateResponse(originalInput);
-            if (response.empty()) {
-                response = chatHandler.getResponse(
-                    originalInput
-                ); // Fallback to human-chat-corpus for undefined
-            }
-            // Show banner only on real greetings
-            if (userInput == "hi" || userInput == "hello" || userInput == "*") {
-                display.showGreetingBanner();
-            }
-            display.greetingResponse(response);
+            bool handled = false;
             if (userInput == "h" ||
                 userInput == "home" ||
                 userInput == "home loan") {
                 current_loan_type = "home";
                 currentState = State::ASK_RESUME;
                 display.promptForInput(utterHandler.getResponse("prompt_resume"));
-            } else if (userInput == "a") {
-                currentState = State::SELECT_LOAN_TYPE;
+                handled = true;
             } else if (userInput == "c" ||
                        userInput == "car" ||
                        userInput == "car loan") {
                 current_loan_type = "car";
                 currentState = State::ASK_RESUME;
                 display.promptForInput(utterHandler.getResponse("prompt_resume"));
+                handled = true;
             } else if (userInput == "s" ||
                        userInput == "scooter" ||
                        userInput == "scooter loan") {
                 current_loan_type = "scooter";
                 currentState = State::ASK_RESUME;
                 display.promptForInput(utterHandler.getResponse("prompt_resume"));
+                handled = true;
             } else if (userInput == "p" ||
                        userInput == "personal" ||
-                       userInput == "personal loan") { // Added personal handling
+                       userInput == "personal loan") {
                 current_loan_type = "personal";
                 currentState = State::ASK_RESUME;
                 display.promptForInput(utterHandler.getResponse("prompt_resume"));
-            } else if (userInput == "resume application") { // Added resume handling
-                currentState = State::RESUME_ID;
-                display.promptForInput(
-                    utterHandler.getResponse("prompt_resume_id")
-                );
-            } else if (userInput == "general chat") { // Added general chat
-                std::string resp = utterHandler.getResponse("enter_general");
-                display.greetingResponse(resp);
-                currentState = State::GENERAL;
-            } else if (userInput == "count applications") {
-                currentState = State::COUNT_CNIC;
-                display.promptForInput(
-                    utterHandler.getResponse("count applications")
-                );
-            } else if (userInput == "view plan") {
-                currentState = State::VIEW_PLAN_ID;
-                display.promptForInput(
-                    utterHandler.getResponse("view plan")
-                );
+                handled = true;
+            }
+            if (!handled) {
+                std::string response = utterHandler.generateResponse(originalInput);
+                if (response.empty()) {
+                    response = chatHandler.getResponse(
+                        originalInput
+                    ); // Fallback to human-chat-corpus for undefined
+                }
+                // Show banner only on real greetings
+                if (userInput == "hi" || userInput == "hello" || userInput == "*") {
+                    display.showGreetingBanner();
+                }
+                display.greetingResponse(response);
+                if (userInput == "a") {
+                    currentState = State::SELECT_LOAN_TYPE;
+                } else if (userInput == "resume application") { // Added resume handling
+                    currentState = State::RESUME_ID;
+                    display.promptForInput(
+                        utterHandler.getResponse("prompt_resume_id")
+                    );
+                } else if (userInput == "general chat") { // Added general chat
+                    std::string resp = utterHandler.getResponse("enter_general");
+                    display.greetingResponse(resp);
+                    currentState = State::GENERAL;
+                } else if (userInput == "count applications") {
+                    currentState = State::COUNT_CNIC;
+                    display.promptForInput(
+                        utterHandler.getResponse("count applications")
+                    );
+                } else if (userInput == "view plan") {
+                    currentState = State::VIEW_PLAN_ID;
+                    display.promptForInput(
+                        utterHandler.getResponse("view plan")
+                    );
+                }
             }
         } else if (currentState == State::ASK_RESUME) { // Added ask resume
             std::string low = utterHandler.toLower(userInput);
@@ -347,7 +355,12 @@ int main() {
                     utterHandler.getResponse("prompt_resume_id")
                 );
             } else if (low == "no" || low == "n") {
-                std::string resp = utterHandler.generateResponse(current_loan_type);
+                std::string key;
+                if (current_loan_type == "home") key = "h";
+                else if (current_loan_type == "car") key = "c";
+                else if (current_loan_type == "scooter") key = "s";
+                else if (current_loan_type == "personal") key = "p";
+                std::string resp = utterHandler.generateResponse(key);
                 display.greetingResponse(resp);
                 if (current_loan_type == "home") {
                     currentState = State::SELECT_AREA_HOME;
@@ -1250,6 +1263,7 @@ int main() {
             if (low == "car" ||
                 low == "home" ||
                 low == "bike" ||
+                low == "scooter" ||
                 low == "personal") {
                 current_loan_data["category"] = low;
                 existing_loans_vec.push_back(current_loan_data);
