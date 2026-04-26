@@ -1,0 +1,7 @@
+Category#Amount#Installments#Total Payable#Advance
+Category 1#500000#60#600000#0
+Category 1#500000#48#550000#0
+Category 1#500000#36#520000#0
+Category 2#1000000#60#1200000#0
+Category 2#1000000#48#1100000#0
+Category 2#1000000#36#1050000#0

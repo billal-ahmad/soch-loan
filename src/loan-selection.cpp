@@ -1,5 +1,5 @@
-#include "../include/loan-selection.h"
-#include "../include/display.h"
+#include "loan-selection.h"
+#include "display.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -59,8 +59,8 @@ bool LoanSelection::storeHomeLoans(const std::string &file_name) {
     return true;
 }
 
-std::vector<HomeLoan> LoanSelection::homeLoansInArea(const std::string &utterence) {
-    std::string area = utterence;
+std::vector<HomeLoan> LoanSelection::homeLoansInArea(const std::string &utterance) {
+    std::string area = utterance;
     std::transform(area.begin(), area.end(), area.begin(), ::tolower);
     
     std::vector<HomeLoan> filteredLoans;

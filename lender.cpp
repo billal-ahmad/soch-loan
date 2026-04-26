@@ -1,12 +1,9 @@
-// File: src/lender.cpp
-// YOUR ORIGINAL CODE – ONLY FIXED: no gibberish + robust input
-
 #include <iostream>
 #include <string>
 #include <vector>
 #include <sstream>
 #include <limits>
-#include "../include/application-handler.h"
+#include "application-handler.h"
 
 // Helper to safely clear cin on bad input
 void clearInput() {
@@ -32,7 +29,7 @@ void printApplication(const Application& app) {
     std::cout << "Avg Electricity: " << app.avg_electricity << " units\n";
     std::cout << "Current Electricity: " << app.current_electricity << " units\n";
 
-    // Existing loans printing (your original logic)
+    // Existing loans printing
     std::cout << "Existing Loans:\n";
     if (app.existing_loans == "no") {
         std::cout << "  None\n";

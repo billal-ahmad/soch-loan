@@ -1,4 +1,4 @@
-#include "../include/car-loan.h"
+#include "car-loan.h"
 
 CarLoan::CarLoan() : _installments(0) {}
 

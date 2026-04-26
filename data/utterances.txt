@@ -7,7 +7,7 @@ A#Please select the category you want to apply for. Press H for a home loan, C f
 H#You are applying for a home loan. Please select area. Options are 1, 2, 3, 4
 C#You are applying for a car loan. Please select make. Options are 1, 2
 S#You are applying for a scooter loan. Please select make. Options are 1
-P#Sorry, personal loan is not implemented in this version.
+P#You are applying for a personal loan. Please select category. Options are 1,2
 select_area1#You have selected Area 1. Here are the available options:
 select_area2#You have selected Area 2. Here are the available options:
 select_area3#You have selected Area 3. Here are the available options:
@@ -16,9 +16,9 @@ select_make1#You have selected Make 1. Here are the available options:
 select_make2#You have selected Make 2. Here are the available options:
 invalid_area#Invalid area selection. Please choose 1, 2, 3, or 4.
 invalid_make#Invalid make selection. Please choose valid option.
-invalid_loan_type#Invalid loan type selection. Please choose H for home loan, C for car loan, S for scooter loan, P for personal loan, or X to exit.
+invalid_loan_type#Invalid loan type selection. Please choose H for home loan, C for car loan, S for scooter loan, P for a personal loan, or X to exit.
 selected_plan#You have selected plan {id}. Here is the monthly payment information:
-prompt_installment#Do you want to view the installment breakdown? (yes/no):
+prompt_installment#Enter starting month for installment breakdown (e.g., January 2026) or 'no' to skip:
 prompt_apply#Do you want to proceed with the loan application? (yes/no):
 invalid_yes_no#Please enter yes or no.
 selected_installment#Here is the detailed monthly installment breakdown for your selected plan:
@@ -33,7 +33,7 @@ prompt_father_name#Please enter your father's name:
 prompt_address#Please enter your postal address:
 prompt_contact#Please enter your contact number:
 prompt_email#Please enter your email address:
-invalid_email#Invalid email address. Please include @ and . 
+invalid_email#Invalid email address. Please include @ and .
 prompt_cnic#Please enter your CNIC number (13 digits without dashes):
 invalid_cnic#Invalid CNIC. Must be 13 digits without dashes.
 prompt_cnic_expiry#Please enter CNIC expiry date (DD-MM-YYYY):
@@ -80,3 +80,16 @@ not_approved#This application is not approved.
 start_month_prompt#Please enter the starting month (e.g., January 2026):
 invalid_month#Invalid starting month format. Use Month YYYY.
 count_result#Submitted: {submitted}, Approved: {approved}, Rejected: {rejected}
+select_category1#You have selected Category 1. Here are the available options:
+select_category2#You have selected Category 2. Here are the available options:
+invalid_category#Invalid category selection. Please choose 1 or 2.
+resume application#Please enter your application ID:
+prompt_resume_id#Enter ID:
+prompt_resume_cnic#Enter CNIC to verify:
+section_saved#Section saved!
+general chat#Entering general conversation mode. Type 'back' to return.
+enter_general#Now in general mode.
+exit_general#Back to main.
+pause#Pausing application.
+prompt_resume#Do you have an existing application to resume? (yes/no):
+invalid_start_month#Invalid starting month. Use Month YYYY or 'no' to skip.

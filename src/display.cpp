@@ -1,4 +1,4 @@
-#include "../include/display.h"
+#include "display.h"
 #include <iostream>
 #include <iomanip>
 #include <windows.h>
@@ -55,7 +55,7 @@ void Display::undefinedInputResponse(const std::string &utterance) {
 }
 
 // -------------------- LOAN TYPES --------------------
-void Display::displyLoanTypes(const std::string &utterance) {
+void Display::displayLoanTypes(const std::string &utterance) {
     setColor(14);
     std::cout << "\nAvailable Loan Types:\n\n";
     setColor(11);
@@ -315,5 +315,50 @@ void Display::monthlyPlanDisplay(
     std::cout << "+-----------------+-----------------+-----------------+\n";
     setColor(10);
     typeText("\nHope this helps! Let me know if you need anything else.\n");
+    setColor(7);
+}
+
+void Display::personalLoanDisplay(
+    const std::vector<PersonalLoan> &personal_loans, 
+    int start, 
+    int end, 
+    const std::string &prompt
+) {
+    if (personal_loans.empty()) {
+        setColor(12);
+        typeText("No personal loan plans available!\n");
+        setColor(7);
+        return;
+    }
+
+    if (start < 0) start = 0;
+    if (end >= static_cast<int>(personal_loans.size()) || end == -1) end = personal_loans.size() - 1;
+
+    setColor(11);
+    typeText("\nAVAILABLE PERSONAL LOAN PLANS:\n\n");
+
+    setColor(14);
+    std::cout << "+----+------------+------------+--------------+----------------+----------+\n";
+    std::cout << "| ID | Category   | Amount     | Installments | Total Payable  | Advance  |\n";
+    std::cout << "+----+------------+------------+--------------+----------------+----------+\n";
+
+    for (int i = start; i <= end; i++) {
+        std::cout << "| "
+                  << std::setw(2) << (i + 1) << " | "
+                  << std::setw(10) << personal_loans[i].getCategory() << " | "
+                  << std::setw(10) << personal_loans[i].getAmount() << " | "
+                  << std::setw(12) << personal_loans[i].getInstallments() << " | "
+                  << std::setw(14) << personal_loans[i].getTotalPayable() << " | "
+                  << std::setw(8) << personal_loans[i].getAdvance() << " |\n";
+    }
+
+    std::cout << "+----+------------+------------+--------------+----------------+----------+\n";
+
+    setColor(10);
+    if (!prompt.empty()) {
+        typeText("\n" + prompt + "\n");
+    } else {
+        typeText("\nEnter the ID of the plan you want to view...\n");
+    }
     setColor(7);
 }

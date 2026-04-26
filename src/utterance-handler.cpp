@@ -1,5 +1,5 @@
-#include "../include/utterence-handler.h"
-#include "../include/display.h"  // add this include for the display class
+#include "utterance-handler.h"
+#include "display.h"  // add this include for the display class
 #include <fstream>
 #include <sstream>
 #include <algorithm>
@@ -7,7 +7,7 @@
 #include <iostream>
 
 // File handling to trim spaces
-std::string UtterenceHandler::trim(const std::string &str) const {
+std::string UtteranceHandler::trim(const std::string &str) const {
     size_t start = str.find_first_not_of(" \t\r\n");
     if (start == std::string::npos) return "";
     size_t end = str.find_last_not_of(" \t\r\n");
@@ -15,7 +15,7 @@ std::string UtterenceHandler::trim(const std::string &str) const {
 }
 
 // Converting to lower case to make input case-insensitive
-std::string UtterenceHandler::toLower(const std::string &str) const {
+std::string UtteranceHandler::toLower(const std::string &str) const {
     std::string result = str;
     std::transform(result.begin(), result.end(), result.begin(),
                    [](unsigned char c) { return std::tolower(c); });
@@ -23,14 +23,14 @@ std::string UtterenceHandler::toLower(const std::string &str) const {
 }
 
 // Default constructor
-UtterenceHandler::UtterenceHandler() {}
+UtteranceHandler::UtteranceHandler() {}
 
 // Parameterized constructor
-UtterenceHandler::UtterenceHandler(const std::string &file_name) {
+UtteranceHandler::UtteranceHandler(const std::string &file_name) {
     storeUserInputAndResponse(file_name);
 }
 
-bool UtterenceHandler::storeUserInputAndResponse(const std::string &file_name) {
+bool UtteranceHandler::storeUserInputAndResponse(const std::string &file_name) {
     std::ifstream file(file_name);
     if (!file.is_open()) {
         std::cerr << "Error: could not open file!! " << file_name << "\n";
@@ -63,7 +63,7 @@ bool UtterenceHandler::storeUserInputAndResponse(const std::string &file_name) {
     return true;
 }
 
-std::string UtterenceHandler::generateResponse(const std::string &input) {
+std::string UtteranceHandler::generateResponse(const std::string &input) {
     // Properly handle multiple spaces by trimming and normalizing
     std::string cleanedInput = trim(input);
     cleanedInput = toLower(cleanedInput);
@@ -77,7 +77,7 @@ std::string UtterenceHandler::generateResponse(const std::string &input) {
     return "";
 }
 
-std::string UtterenceHandler::getResponse(const std::string &key) const {
+std::string UtteranceHandler::getResponse(const std::string &key) const {
     std::string cleanedKey = toLower(trim(key));
 
     for (size_t i = 0; i < _input.size(); i++) {
@@ -87,7 +87,7 @@ std::string UtterenceHandler::getResponse(const std::string &key) const {
     return "";
 }
 
-std::string UtterenceHandler::replacePlaceholder(const std::string &text,
+std::string UtteranceHandler::replacePlaceholder(const std::string &text,
                                                  const std::string &placeholder,
                                                  const std::string &value) const {
     std::string res = text;

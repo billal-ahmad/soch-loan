@@ -1,4 +1,4 @@
-#include "../include/home-loan.h"
+#include "home-loan.h"
 
 // Default constructor
 HomeLoan::HomeLoan() 

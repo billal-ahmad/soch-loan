@@ -9,7 +9,7 @@ public:
     LoanSelection();
     LoanSelection(const std::string &file_name);
     bool storeHomeLoans(const std::string &file_name);
-    std::vector<HomeLoan> homeLoansInArea(const std::string &utterence);
+    std::vector<HomeLoan> homeLoansInArea(const std::string &utterance);
     bool selectHome();
     bool payPerMonth();
     bool monthlyInstallment();

@@ -99,3 +99,7 @@ void ApplicationHandler::update(const Application& updated_app) {
         }
     }
 }
+
+bool ApplicationHandler::isIncomplete(const std::string& status) const {
+    return status == "C1" || status == "C2" || status == "C3";
+}

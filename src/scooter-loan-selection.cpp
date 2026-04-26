@@ -1,4 +1,4 @@
-#include "../include/scooter-loan-selection.h"
+#include "scooter-loan-selection.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -48,8 +48,8 @@ bool ScooterLoanSelection::storeScooterLoans(const std::string &file_name) {
     return true;
 }
 
-std::vector<ScooterLoan> ScooterLoanSelection::scootersInMake(const std::string &utterence) {
-    std::string make = utterence;
+std::vector<ScooterLoan> ScooterLoanSelection::scootersInMake(const std::string &utterance) {
+    std::string make = utterance;
     std::transform(make.begin(), make.end(), make.begin(), ::tolower);
     
     std::vector<ScooterLoan> filtered;
