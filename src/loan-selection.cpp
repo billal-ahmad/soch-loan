@@ -1,5 +1,5 @@
-#include "../include/loan-selection.h"
-#include "../include/display.h"
+#include "loan-selection.h"
+#include "display.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>

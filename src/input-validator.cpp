@@ -1,4 +1,4 @@
-#include "../include/input-validator.h"
+#include "input-validator.h"
 #include <iostream>
 #include <limits>
 

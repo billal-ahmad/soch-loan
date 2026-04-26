@@ -1,18 +1,18 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "include/utterance-handler.h"
-#include "include/loan-selection.h"
-#include "include/display.h"
-#include "include/home-loan.h"
-#include "include/application-handler.h"
-#include "include/car-loan.h"
-#include "include/car-loan-selection.h"
-#include "include/scooter-loan.h"
-#include "include/scooter-loan-selection.h"
-#include "include/personal-loan.h" // Added for personal loans
-#include "include/personal-loan-selection.h" // Added for personal loans
-#include "include/general-chat-handler.h" // Added for general chat
+#include "utterance-handler.h"
+#include "loan-selection.h"
+#include "display.h"
+#include "home-loan.h"
+#include "application-handler.h"
+#include "car-loan.h"
+#include "car-loan-selection.h"
+#include "scooter-loan.h"
+#include "scooter-loan-selection.h"
+#include "personal-loan.h"
+#include "personal-loan-selection.h"
+#include "general-chat-handler.h"
 #include <map>
 #include <algorithm>
 #include <cctype>

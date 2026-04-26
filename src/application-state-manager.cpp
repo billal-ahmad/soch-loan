@@ -1,4 +1,4 @@
-#include "../include/application-state-manager.h"
+#include "application-state-manager.h"
 #include <algorithm>
 
 ApplicationStateManager::ApplicationStateManager() 

@@ -1,5 +1,5 @@
-#include "../include/utterance-handler.h"
-#include "../include/display.h"  // add this include for the display class
+#include "utterance-handler.h"
+#include "display.h"  // add this include for the display class
 #include <fstream>
 #include <sstream>
 #include <algorithm>

@@ -1,4 +1,4 @@
-#include "../include/display.h"
+#include "display.h"
 #include <iostream>
 #include <iomanip>
 #include <windows.h>

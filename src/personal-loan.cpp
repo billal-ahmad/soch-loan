@@ -1,4 +1,4 @@
-#include "../include/personal-loan.h"
+#include "personal-loan.h"
 
 PersonalLoan::PersonalLoan() : _installments(0) {}
 

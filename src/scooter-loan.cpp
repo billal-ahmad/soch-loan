@@ -1,4 +1,4 @@
-#include "../include/scooter-loan.h"
+#include "scooter-loan.h"
 
 ScooterLoan::ScooterLoan() : _installments(0) {}
 

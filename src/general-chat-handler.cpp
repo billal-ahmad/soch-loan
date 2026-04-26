@@ -1,4 +1,4 @@
-#include "../include/general-chat-handler.h"
+#include "general-chat-handler.h"
 #include <fstream>
 #include <sstream>
 #include <algorithm>
