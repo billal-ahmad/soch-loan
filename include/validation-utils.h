@@ -30,10 +30,10 @@ public:
     // Collection validations
     static std::vector<std::string> validateAndSanitize(const std::vector<std::string>& inputs);
     static bool validateDateRange(const std::string& startDate, const std::string& endDate);
+    static bool isValidDayMonthYear(int day, int month, int year);
 
 private:
     // Helper methods
     static bool isValidMonthName(const std::string& month);
     static bool isValidYear(const std::string& year);
-    static bool isValidDayMonthYear(int day, int month, int year);
 };
