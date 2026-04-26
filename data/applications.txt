@@ -3,3 +3,6 @@
 0003#personal#Category 1#1#ali#ahmad#kkkkk#78936914785#dkjdkfj@.com#1239877413698#01-05-2035#unemployed#widowed#female#2#500000#4500#3945#no#arkam#2587413698741#02-12-2024#36547896541#jdsjfksdj@.com#aliza#3245987597415#02-09-2023#98720145879#kdkdkkk@.com#jjjj#kkkk#llll#iiii#approved#
 0004#personal#Category 1#1##############################C0#
 0005#car#Make 1#1#adnan#ehsan#kkkkkkkk#12345678941#kklll@.com#9639639639639#21-05-2028#retired#married#male#4###################C1#
+0006#car#Make 2#1#ali#ahmad#kkkkk#12345679812#kkk.@#1234657981234#02-20-2028#retired#single#male#0###################C0#
+0007#car#Make 1#2#has#abs#4546#45678912345#fgfjgh@kdgk.ejfh#1234567891234#45-45-4545#salaried#single#other#1000#10#150#500################C1#
+0008#car#Make 1#2#dawood islam#shahid aman#2031#12345678909#d@gmail.com#1212121212121#12-09-2026#unemployed#single#male#2#567777#78000#12000#no#sex#0987654321123#############C2#

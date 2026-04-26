@@ -48,8 +48,8 @@ bool CarLoanSelection::storeCarLoans(const std::string &file_name) {
     return true;
 }
 
-std::vector<CarLoan> CarLoanSelection::carsInMake(const std::string &utterence) {
-    std::string make = utterence;
+std::vector<CarLoan> CarLoanSelection::carsInMake(const std::string &utterance) {
+    std::string make = utterance;
     std::transform(make.begin(), make.end(), make.begin(), ::tolower);
     
     std::vector<CarLoan> filtered;

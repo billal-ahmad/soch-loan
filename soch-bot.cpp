@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "include/utterence-handler.h"
+#include "include/utterance-handler.h"
 #include "include/loan-selection.h"
 #include "include/display.h"
 #include "include/home-loan.h"
@@ -20,9 +20,9 @@
 
 int main() {
     // 1. Load utterances from file in data/ folder
-    UtterenceHandler utterHandler;
-    if (!utterHandler.storeUserInputAndResponse("data/utterences.txt")) {
-        std::cerr << "Failed to load data/utterences.txt. Exiting...\n";
+    UtteranceHandler utterHandler;
+    if (!utterHandler.storeUserInputAndResponse("data/utterances.txt")) {
+        std::cerr << "Failed to load data/utterances.txt. Exiting...\n";
         return 1;
     }
 

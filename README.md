@@ -1,30 +1,30 @@
 # Soch Loan
 A CLI-based chat bot to provide the loan.
 
-## Descroption
-It reads predefined user inputs from file to intereact with users to give the feel of chat bot and guide the users applying for differect types of loans. 
+## Description
+It reads predefined user inputs from file to interact with users to give the feel of chat bot and guide the users applying for different types of loans. 
 
 ## Features
-- Reads user inputs and Soch Loan responses from 'utterences.txt'.
+- Reads user inputs and Soch Loan responses from 'utterances.txt'.
 - Provides general response for unknown inputs using a '*' fallback.
-- Supports Home Loan moudle with area, size, price, installments, and down payment options.
-- File-driven design. No need to modify the code to add new utterneces or loan data.
-- Eisily extendible to handle car, scooter or personal loans in future phases.
+- Supports Home Loan module with area, size, price, installments, and down payment options.
+- File-driven design. No need to modify the code to add new utterances or loan data.
+- Easily extendible to handle car, scooter or personal loans in future phases.
 
 ## File Structure
 ```
 soch-loan/
 |
 ├ data/
-|   ├utterence.txt
+|   ├utterances.txt
 |   └home.txt
 |
 ├ include/
-|   ├utterence-handler.h
+|   ├utterance-handler.h
 |   └loan-selection.h
 |
 ├ src/
-|   ├utterence-handler.cpp
+|   ├utterance-handler.cpp
 |   └loan-selection.cpp
 |
 └ main.cpp
@@ -38,9 +38,9 @@ soch-loan/
     .\soch-loan.exe
 
 ## File Description
-- **utterences.txt** - Contains predefined user inputs and chatbot responses.
+- **utterances.txt** - Contains predefined user inputs and chatbot responses.
 - **home.txt** - Contains home-loan details (area, size, price, etc.).
-- **utterence-handler.h/cpp** - Module to read and match utterences.
+- **utterance-handler.h/cpp** - Module to read and match utterances.
 - **loan-selection.h/cpp** - Module to read and display loan data.
 - **main.cpp** - Controls the chatbot flow.
 

@@ -55,7 +55,7 @@ void Display::undefinedInputResponse(const std::string &utterance) {
 }
 
 // -------------------- LOAN TYPES --------------------
-void Display::displyLoanTypes(const std::string &utterance) {
+void Display::displayLoanTypes(const std::string &utterance) {
     setColor(14);
     std::cout << "\nAvailable Loan Types:\n\n";
     setColor(11);

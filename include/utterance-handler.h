@@ -1,13 +1,13 @@
 #pragma once
 #include<vector>
 #include<string>
-class UtterenceHandler {
+class UtteranceHandler {
 private:
     std::vector<std::string> _input;
     std::vector<std::string> _response;
 public:
-    UtterenceHandler();
-    UtterenceHandler(const std::string &file_name);
+    UtteranceHandler();
+    UtteranceHandler(const std::string &file_name);
     std::string trim(const std::string &str) const;
     std::string toLower(const std::string &str) const;
     bool storeUserInputAndResponse(const std::string &file_name);
